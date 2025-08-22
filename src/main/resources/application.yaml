@@ -1,0 +1,50 @@
+spring:
+  main:
+    allow-circular-references=true:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/aahara
+    username: atmansanjai
+    password: atmansanjai
+
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+
+  data:
+    redis:
+      host: localhost
+      port: 6379
+
+  cache:
+    type: redis
+
+server:
+  port: 8080
+
+jwt:
+  secret: 2f3d5c7a8b9e11223f45678c9abcedef0123456789abcdef0123456789abcdef
+  expiration: 600000
+  refresh-expiration: 86400000
+
+
+admin:
+  email: admin@aahara.com
+  password: admin123
+
+logging:
+  level:
+    org.springframework.context.annotation: DEBUG
+    org.springframework.beans.factory: DEBUG
+
+
+  springdoc:
+    api-docs:
+      enabled: true
+    springdoc:
+      swagger-ui:
+        enabled: true
