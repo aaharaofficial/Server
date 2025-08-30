@@ -3,6 +3,7 @@ package com.atman.aahara.Customer.Base;
 import com.atman.aahara.Exception.ResourceNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.UUID;
 
@@ -18,6 +19,7 @@ public class CustomerLogic implements CustomerService {
                 .orElseThrow(() -> new ResourceNotFoundException("Customer Not found " + customerID));
     }
 
+    @Transactional
     @Override
     public Customer saveCustomer(Customer customer) {
         return customerRepository.save(customer);
@@ -34,6 +36,7 @@ public class CustomerLogic implements CustomerService {
                 .orElseThrow(() -> new ResourceNotFoundException("Customer Not found " + mobileNumber));
     }
 
+    @Transactional
     @Override
     public void deleteCustomer(UUID customerID) {
         if (customerRepository.existsById(customerID)) {

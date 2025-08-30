@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "1055928192618",
+    "project_id": "aaharaindia-d600e",
+    "storage_bucket": "aaharaindia-d600e.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1055928192618:android:95ae82f7b6df7d47b48413",
+        "android_client_info": {
+          "package_name": "com.atman.aahara"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDR50bZaNixG4pj1PwdnOjFAead3vftucM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

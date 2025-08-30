@@ -10,13 +10,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @Data
 public class CustomerAuthResponse {
-    private String ipAddress;
-    private String userAgent;
-    private String latitude;
-    private String longitude;
-    private String mobileNumber;
     private String refreshToken;
     private String accessToken;
-    private boolean isVerified;
     private boolean isCustomer;
 }

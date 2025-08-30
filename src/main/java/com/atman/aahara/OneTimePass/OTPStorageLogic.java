@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.CredentialsExpiredException;
 import org.springframework.stereotype.Service;
+
 import java.time.Duration;
 import java.time.Instant;
 
@@ -21,38 +22,60 @@ public class OTPStorageLogic implements OTPStorageService {
     @Override
     public OneTimePass saveSession(String identifier, String otpCode) {
         OneTimePass existingSession = getSession(identifier);
-
-        int attempts = 1;
-        Long ttl = OTP_EXPIRY.getSeconds();
+        int currentAttempt = 1;
 
         if (existingSession != null) {
-            attempts = existingSession.getCurrentAttempt() + 1;
+            currentAttempt = existingSession.getCurrentAttempt() + 1;
 
-            if (attempts > MAX_ATTEMPTS) {
-                ttl = OTP_SESSION_EXPIRY.getSeconds();
-                throw new CredentialsExpiredException("Max OTP attempts reached. Try again later.");
+            if (currentAttempt > MAX_ATTEMPTS) {
+                throw new CredentialsExpiredException(
+                        "Max OTP attempts reached. Try again after " + OTP_SESSION_EXPIRY.toMinutes() + " minutes"
+                );
             }
         }
 
-        OneTimePass newSession = new OneTimePass(
+        OneTimePass session = new OneTimePass(
                 identifier,
                 otpCode,
                 Instant.now().plus(OTP_EXPIRY),
-                attempts,
-                ttl
+                currentAttempt,
+                OTP_EXPIRY.getSeconds()
         );
 
-        return oneTimePassRepository.save(newSession);
+        return oneTimePassRepository.save(session);
     }
 
     @Override
     public OneTimePass getSession(String identifier) {
-        return oneTimePassRepository.findById(identifier)
-                .orElse(null);
+        return oneTimePassRepository.findById(identifier).orElse(null);
     }
 
     @Override
     public void reset(String identifier) {
         oneTimePassRepository.deleteById(identifier);
+    }
+
+    /**
+     * Validates the OTP for the given identifier.
+     *
+     * @param identifier User/session identifier
+     * @param otpCode    OTP code entered
+     * @return true if valid
+     */
+    public boolean validateOtp(String identifier, String otpCode) {
+        OneTimePass session = getSession(identifier);
+        if (session == null) return false;
+
+        if (session.getValidTo().isBefore(Instant.now())) {
+            reset(identifier);
+            throw new CredentialsExpiredException("OTP expired");
+        }
+
+        if (!session.getOtpCode().equals(otpCode)) {
+            return false;
+        }
+
+        reset(identifier); // OTP correct → reset session
+        return true;
     }
 }

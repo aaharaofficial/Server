@@ -44,3 +44,15 @@ springdoc:
     enabled: true
   swagger-ui:
     enabled: true
+
+
+aws:
+  access-key-id: YOUR_ACCESS_KEY
+  secret-access-key: YOUR_SECRET_KEY
+  s3:
+    region : ap-south-1
+    bucket-name : your-bucket-name
+  sns:
+    topic-arn: arn:aws:sns:ap-south-1:123456789012:YourTopic
+  ses:
+    sender-email : no-reply@yourdomain.com

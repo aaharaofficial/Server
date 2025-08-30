@@ -3,7 +3,9 @@ package com.atman.aahara.Customer.Base;
 
 import com.atman.aahara.Customer.Enum.Gender;
 import com.atman.aahara.Customer.Enum.RelationShipStatus;
+import com.atman.aahara.Family.Family;
 import com.atman.aahara.Global.BaseEntity;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -13,6 +15,7 @@ import lombok.experimental.SuperBuilder;
 
 import java.time.LocalDate;
 import java.time.Period;
+
 
 @EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor
@@ -38,6 +41,11 @@ public class Customer extends BaseEntity {
     private String mobileNumber;
 
     private RelationShipStatus relationShipStatus;
+
+    @ManyToOne()
+    @JoinColumn(name = "family_id")
+    @JsonBackReference
+    private Family family;
 
     @PrePersist
     @PreUpdate

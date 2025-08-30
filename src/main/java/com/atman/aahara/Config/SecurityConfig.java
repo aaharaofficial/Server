@@ -36,7 +36,6 @@ public class SecurityConfig {
                                 "/swagger-ui/**",
                                 "/swagger-ui.html"
                         ).permitAll()
-                        .requestMatchers("/admin/**").permitAll()
                         .requestMatchers("/auth/**").permitAll() // Adjust this to your actual public routes
                         .anyRequest().authenticated()
                 )

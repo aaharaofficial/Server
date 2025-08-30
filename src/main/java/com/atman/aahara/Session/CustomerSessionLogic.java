@@ -2,6 +2,7 @@ package com.atman.aahara.Session;
 
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.authentication.CredentialsExpiredException;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -29,7 +30,8 @@ public class CustomerSessionLogic implements CustomerSessionService {
 
     @Override
     public CustomerSession getSessionByRefreshToken(String refreshToken) {
-        return sessionRepository.findByRefreshToken(refreshToken).orElse(null);
+        return sessionRepository.findByRefreshToken(refreshToken)
+                .orElseThrow(() -> new CredentialsExpiredException("Session not found for token: " + refreshToken));
     }
 
     @Override

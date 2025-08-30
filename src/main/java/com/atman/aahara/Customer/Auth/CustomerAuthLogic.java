@@ -14,6 +14,7 @@ import com.atman.aahara.Security.JwtService;
 import com.atman.aahara.Session.CustomerSession;
 import com.atman.aahara.Session.CustomerSessionService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.CredentialsExpiredException;
 import org.springframework.stereotype.Service;
 
@@ -22,6 +23,7 @@ import java.time.LocalDateTime;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class CustomerAuthLogic implements CustomerAuthService {
 
     private final OTPStorageService otpStorageService;
@@ -34,12 +36,15 @@ public class CustomerAuthLogic implements CustomerAuthService {
     @Override
     public OTPResponse sendOtpToMobileNumber(String mobileNumber) {
         String otpCode = otpService.generateOTP();
-        OneTimePass oneTimePass = otpStorageService.saveSession(mobileNumber, otpCode);
-        smsNotificationService.sendSmsNotification(mobileNumber, "");
+        OneTimePass session = otpStorageService.saveSession(mobileNumber, otpCode);
+
+        // Send SMS asynchronously
+        smsNotificationService.sendSmsNotification(mobileNumber, "Your OTP is: " + otpCode);
+
         return OTPResponse.builder()
-                .currentAttempt(oneTimePass.getCurrentAttempt())
-                .identifier(oneTimePass.getIdentifier())
-                .validTo(oneTimePass.getValidTo())
+                .currentAttempt(session.getCurrentAttempt())
+                .identifier(session.getIdentifier())
+                .validTo(session.getValidTo())
                 .build();
     }
 
@@ -49,7 +54,7 @@ public class CustomerAuthLogic implements CustomerAuthService {
         Customer customer = customerService.getCustomerByMobileNumber(mobileNumber);
         CustomerSession sessionByRefreshToken = customerSessionService.getSessionByRefreshToken(token);
         if (!sessionByRefreshToken.isValid()) {
-            throw new CredentialsExpiredException("token was invalid ");
+            throw new CredentialsExpiredException("token was invalid , Login in again  ");
         }
         String accessToken = jwtService.generateToken(customer.getMobileNumber(), "CUSTOMER");
         String refreshToken = jwtService.generateRefreshToken(customer.getMobileNumber());
@@ -67,6 +72,7 @@ public class CustomerAuthLogic implements CustomerAuthService {
     @Override
     public CustomerAuthResponse verifyOtpUsingMobileNumber(CustomerAuthRequest customerAuthRequest) {
         OneTimePass otpSession = otpStorageService.getSession(customerAuthRequest.getMobileNumber());
+        log.info("otp session" + otpSession.getIdentifier() +  otpSession.getOtpCode() + customerAuthRequest.getOtpCode());
         boolean verificationStatus = otpService.verify(otpSession.getOtpCode(), customerAuthRequest.getOtpCode());
         if (!verificationStatus) {
             throw new CredentialsExpiredException(" your otp is not matched .." + customerAuthRequest.getMobileNumber());
@@ -80,13 +86,9 @@ public class CustomerAuthLogic implements CustomerAuthService {
                 .issuedAt(LocalDateTime.now()).expiresAt(jwtService.getRefreshExpiryDuration()).build();
         CustomerSession authSession = customerSessionService.saveSession(customerSession);
         return CustomerAuthResponse.builder()
-                .isVerified(true)
                 .isCustomer(isCustomer)
                 .accessToken(accessToken)
                 .refreshToken(refreshToken)
-                .longitude(authSession.getLongitude())
-                .latitude(authSession.getLatitude())
-                .userAgent(authSession.getUserAgent())
                 .build();
     }
 

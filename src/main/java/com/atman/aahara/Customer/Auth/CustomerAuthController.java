@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/customer/auth")
+@RequestMapping("/auth/customer")
 @Slf4j
 @Tag(name = "Customer Authentication", description = "APIs for sending and verifying OTP")
 public class CustomerAuthController implements CustomerAuthApi {
@@ -31,12 +31,16 @@ public class CustomerAuthController implements CustomerAuthApi {
         return ResponseEntity.ok(otpResponse);
     }
 
+    @PostMapping("/refresh-token")
+    @Operation(summary = "Refresh OTP", description = " Refresh the token  using customer mobile number")
     @Override
     public ResponseEntity<TokenResponse> refreshToken(String token, String mobileNumber) {
         TokenResponse tokenResponse = customerAuthService.refreshToken(token, mobileNumber);
         return ResponseEntity.ok(tokenResponse);
     }
 
+    @PostMapping("/logout")
+    @Operation(summary = "logout", description = " Logout  using customer mobile number")
     @Override
     public ResponseEntity<?> logout(String token) {
         customerAuthService.logout(token);

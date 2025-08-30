@@ -17,8 +17,6 @@ import java.time.LocalDate;
 public class CustomerCredentialRequest {
     @NotNull(message = "name must not be null ")
     private String name;
-    @NotNull(message = "mobileNumber must not be null ")
-    private String mobileNumber;
     @NotNull(message = "email must not be null ")
     private String email;
     @NotNull(message = "age must not be null ")
