@@ -1,6 +1,6 @@
 package com.atman.aahara.Customer.Base;
 
-import com.atman.aahara.Exception.EntityNotFoundException;
+import com.atman.aahara.Exception.ResourceNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -15,7 +15,7 @@ public class CustomerLogic implements CustomerService {
     @Override
     public Customer getCustomer(UUID customerID) {
         return customerRepository.findById(customerID)
-                .orElseThrow(() -> new EntityNotFoundException("Customer Not found " + customerID));
+                .orElseThrow(() -> new ResourceNotFoundException("Customer Not found " + customerID));
     }
 
     @Override
@@ -31,7 +31,7 @@ public class CustomerLogic implements CustomerService {
     @Override
     public Customer getCustomerByMobileNumber(String mobileNumber) {
         return customerRepository.findByMobileNumber(mobileNumber)
-                .orElseThrow(() -> new EntityNotFoundException("Customer Not found " + mobileNumber));
+                .orElseThrow(() -> new ResourceNotFoundException("Customer Not found " + mobileNumber));
     }
 
     @Override

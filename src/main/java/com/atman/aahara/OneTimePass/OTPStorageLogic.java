@@ -1,10 +1,9 @@
 package com.atman.aahara.OneTimePass;
 
-import com.atman.aahara.Exception.OtpMaximumLimitException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.authentication.CredentialsExpiredException;
 import org.springframework.stereotype.Service;
-
 import java.time.Duration;
 import java.time.Instant;
 
@@ -31,7 +30,7 @@ public class OTPStorageLogic implements OTPStorageService {
 
             if (attempts > MAX_ATTEMPTS) {
                 ttl = OTP_SESSION_EXPIRY.getSeconds();
-                throw new OtpMaximumLimitException("Max OTP attempts reached. Try again later.");
+                throw new CredentialsExpiredException("Max OTP attempts reached. Try again later.");
             }
         }
 

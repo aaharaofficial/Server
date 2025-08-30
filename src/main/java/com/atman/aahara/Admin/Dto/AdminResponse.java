@@ -1,5 +1,4 @@
-package com.atman.aahara.Admin;
-
+package com.atman.aahara.Admin.Dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -11,6 +10,6 @@ import lombok.NoArgsConstructor;
 @Builder
 @Data
 public class AdminResponse {
-    private String refreshToken;
-    private String accessToken;
+    private String token;
+    private String email;
 }

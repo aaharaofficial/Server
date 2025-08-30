@@ -6,8 +6,6 @@ import com.atman.aahara.Customer.Auth.Dto.OTPResponse;
 import com.atman.aahara.Customer.Auth.Dto.TokenResponse;
 import com.atman.aahara.Customer.Base.Customer;
 import com.atman.aahara.Customer.Base.CustomerService;
-import com.atman.aahara.Exception.OTPNotVerifiedException;
-import com.atman.aahara.Exception.TokenExpiredException;
 import com.atman.aahara.Notification.SmsNotificationService;
 import com.atman.aahara.OneTimePass.OTPService;
 import com.atman.aahara.OneTimePass.OTPStorageService;
@@ -16,6 +14,7 @@ import com.atman.aahara.Security.JwtService;
 import com.atman.aahara.Session.CustomerSession;
 import com.atman.aahara.Session.CustomerSessionService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.authentication.CredentialsExpiredException;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -50,7 +49,7 @@ public class CustomerAuthLogic implements CustomerAuthService {
         Customer customer = customerService.getCustomerByMobileNumber(mobileNumber);
         CustomerSession sessionByRefreshToken = customerSessionService.getSessionByRefreshToken(token);
         if (!sessionByRefreshToken.isValid()) {
-            throw new TokenExpiredException("token was invalid ");
+            throw new CredentialsExpiredException("token was invalid ");
         }
         String accessToken = jwtService.generateToken(customer.getMobileNumber(), "CUSTOMER");
         String refreshToken = jwtService.generateRefreshToken(customer.getMobileNumber());
@@ -70,7 +69,7 @@ public class CustomerAuthLogic implements CustomerAuthService {
         OneTimePass otpSession = otpStorageService.getSession(customerAuthRequest.getMobileNumber());
         boolean verificationStatus = otpService.verify(otpSession.getOtpCode(), customerAuthRequest.getOtpCode());
         if (!verificationStatus) {
-            throw new OTPNotVerifiedException(" your otp is not matched .." + customerAuthRequest.getMobileNumber());
+            throw new CredentialsExpiredException(" your otp is not matched .." + customerAuthRequest.getMobileNumber());
         }
         boolean isCustomer = customerService.doesCustomerExists(customerAuthRequest.getMobileNumber());
         String accessToken = jwtService.generateToken(customerAuthRequest.getMobileNumber(), "CUSTOMER");

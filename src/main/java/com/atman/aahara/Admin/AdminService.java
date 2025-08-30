@@ -1,11 +1,13 @@
 package com.atman.aahara.Admin;
 
+import com.atman.aahara.Admin.Dto.TokenResponse;
+
 public interface AdminService {
     Admin saveAdmin(Admin admin);
 
     Admin getAdminByEmail(String email);
 
-    AdminResponse refreshToken(String token);
+    TokenResponse refreshToken(String token);
 
-    AdminResponse login(String email, String password);
+    TokenResponse login(String email, String password);
 }

@@ -8,7 +8,6 @@ import org.springframework.stereotype.Component;
 @Component
 @ConfigurationProperties(prefix = "admin")
 public class AdminConfig {
-
     private String email;
     private String password;
 }

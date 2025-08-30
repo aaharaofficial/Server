@@ -36,6 +36,7 @@ public class SecurityConfig {
                                 "/swagger-ui/**",
                                 "/swagger-ui.html"
                         ).permitAll()
+                        .requestMatchers("/admin/**").permitAll()
                         .requestMatchers("/auth/**").permitAll() // Adjust this to your actual public routes
                         .anyRequest().authenticated()
                 )
@@ -58,7 +59,7 @@ public class SecurityConfig {
     @Bean
     public CorsFilter corsFilter() {
         CorsConfiguration config = new CorsConfiguration();
-        config.addAllowedOrigin("https://your-production-domain.com"); // Set your trusted domain
+        config.addAllowedOrigin("https://your-production-domain.com");
         config.addAllowedHeader("*");
         config.addAllowedMethod("*");
         config.setAllowCredentials(true);
