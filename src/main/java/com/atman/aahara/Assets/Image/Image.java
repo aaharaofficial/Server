@@ -2,6 +2,7 @@ package com.atman.aahara.Assets.Image;
 
 import com.atman.aahara.Global.BaseEntity;
 import com.atman.aahara.Inventory.Inventory;
+import com.atman.aahara.Recipe.Base.Recipe;
 import jakarta.persistence.Entity;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
@@ -24,4 +25,7 @@ public class Image extends BaseEntity {
     private boolean isEncoded;
     @OneToOne(mappedBy = "image")
     private Inventory inventory;
+
+    @OneToOne(mappedBy = "image")
+    private Recipe recipe;
 }
