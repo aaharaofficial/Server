@@ -1,0 +1,16 @@
+package com.atman.aahara.WebSocket;
+
+public enum PlannerEventType {
+    USER_ONLINE,
+    USER_OFFLINE,
+    USER_MODIFYING,
+    MEAL_ADDED,
+    MEAL_UPDATED,
+    MEAL_REMOVED,
+    INGREDIENT_ADDED,
+    INGREDIENT_REMOVED,
+    INGREDIENT_UPDATED,
+    ITEM_ADDED,
+    ITEM_REMOVED,
+    ITEM_UPDATED
+}
